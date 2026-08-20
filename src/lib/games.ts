@@ -42,6 +42,10 @@ export interface SavedGame {
 
 const GAMES_KEY = "dtc.games";
 const SAVED_KEY = "dtc.saved";
+const hasSupabaseConfig = Boolean(
+  import.meta.env["VITE_SUPABASE_URL"] &&
+    import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+);
 
 const read = <T,>(key: string, fallback: T): T => {
   if (typeof window === "undefined") return fallback;
@@ -72,6 +76,7 @@ export async function saveGame(record: GameRecord) {
 }
 
 export async function pushGame(record: GameRecord) {
+  if (!hasSupabaseConfig) return;
   const { data } = await supabase.auth.getUser();
   if (!data.user) return;
   await supabase.from("games").upsert({
@@ -95,6 +100,7 @@ export async function pushGame(record: GameRecord) {
 
 /** Pull cloud games and merge them with what is stored on this device. */
 export async function syncGames(): Promise<GameRecord[]> {
+  if (!hasSupabaseConfig) return listGames();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return listGames();
   const { data } = await supabase
@@ -133,6 +139,7 @@ export async function syncGames(): Promise<GameRecord[]> {
 
 export async function clearHistory() {
   writeGames([]);
+  if (!hasSupabaseConfig) return;
   const { data } = await supabase.auth.getUser();
   if (data.user) await supabase.from("games").delete().eq("user_id", data.user.id);
 }
@@ -143,6 +150,7 @@ export function getSavedGame(): SavedGame | null {
 
 export async function setSavedGame(state: SavedGame) {
   localStorage.setItem(SAVED_KEY, JSON.stringify(state));
+  if (!hasSupabaseConfig) return;
   const { data } = await supabase.auth.getUser();
   if (data.user) {
     await supabase.from("saved_games").upsert({ user_id: data.user.id, state: state as never });
@@ -151,6 +159,7 @@ export async function setSavedGame(state: SavedGame) {
 
 export async function clearSavedGame() {
   localStorage.removeItem(SAVED_KEY);
+  if (!hasSupabaseConfig) return;
   const { data } = await supabase.auth.getUser();
   if (data.user) await supabase.from("saved_games").delete().eq("user_id", data.user.id);
 }

@@ -22,6 +22,11 @@ const AuthContext = createContext<Ctx>({
   refreshProfile: async () => {}, signOut: async () => {},
 });
 
+const hasSupabaseConfig = Boolean(
+  import.meta.env["VITE_SUPABASE_URL"] &&
+    import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+);
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -37,6 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (!hasSupabaseConfig) {
+      setLoading(false);
+      return;
+    }
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next);
       setLoading(false);
@@ -65,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (session?.user) await loadProfile(session.user.id);
         },
         signOut: async () => {
-          await supabase.auth.signOut();
+          if (hasSupabaseConfig) await supabase.auth.signOut();
         },
       }}
     >
