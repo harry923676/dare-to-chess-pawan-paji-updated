@@ -27,8 +27,8 @@ interface Props {
 
 export function Piece({ type, color, board = false, sizePercent = 100, className }: Props) {
   const src = PIECES[`${color}${type}`];
-  const clampedBoardPercent = Math.min(Math.max(sizePercent, 75), 92);
-  const inlineSize = board ? `${clampedBoardPercent}%` : `${Math.max(1.3, sizePercent / 80)}em`;
+  const clampedBoardPercent = Math.min(Math.max(sizePercent, 90), 140);
+  const inlineSize = board ? `${clampedBoardPercent}%` : `${Math.max(1.5, sizePercent / 74)}em`;
 
   return (
     <img
@@ -42,9 +42,13 @@ export function Piece({ type, color, board = false, sizePercent = 100, className
           ? {
               width: inlineSize,
               height: inlineSize,
-              maxWidth: "94%",
-              maxHeight: "94%",
+              maxWidth: "100%",
+              maxHeight: "100%",
               display: "block",
+              transform: "scale(1.2)",
+              transformOrigin: "center center",
+              filter:
+                "drop-shadow(0 8px 8px rgba(0,0,0,0.22)) contrast(1.08) saturate(1.05)",
             }
           : { width: inlineSize, height: inlineSize }
       }

@@ -55,7 +55,7 @@ export const DEFAULT_SETTINGS: Settings = {
   sound: true,
   haptics: true,
   animationSpeed: 200,
-  pieceSize: 110,
+  pieceSize: 140,
   defaultLevel: 4,
   showEngineInfo: false,
   onboarded: false,

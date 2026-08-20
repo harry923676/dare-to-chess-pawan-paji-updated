@@ -115,10 +115,10 @@ function SettingsPage() {
         <Slider
           className="mt-3"
           value={[settings.pieceSize]}
-          min={70}
-          max={115}
-          step={2}
-          onValueChange={([v]) => update({ pieceSize: v ?? 110 })}
+          min={90}
+          max={150}
+          step={5}
+          onValueChange={([v]) => update({ pieceSize: v ?? 140 })}
         />
         <p className="mt-1 text-xs text-muted-foreground">{settings.pieceSize}%</p>
       </section>
