@@ -25,8 +25,10 @@ interface Props {
   className?: string;
 }
 
-export function Piece({ type, color, board = false, className }: Props) {
+export function Piece({ type, color, board = false, sizePercent = 100, className }: Props) {
   const src = PIECES[`${color}${type}`];
+  const clampedBoardPercent = Math.min(Math.max(sizePercent, 75), 92);
+  const inlineSize = board ? `${clampedBoardPercent}%` : `${Math.max(1.3, sizePercent / 80)}em`;
 
   return (
     <img
@@ -35,7 +37,17 @@ export function Piece({ type, color, board = false, className }: Props) {
       className={`chess-piece shrink-0 object-contain ${className ?? ""}`}
       draggable={false}
       src={src}
-      style={board ? { width: "80%", height: "80%" } : { width: "1.25em", height: "1.25em" }}
+      style={
+        board
+          ? {
+              width: inlineSize,
+              height: inlineSize,
+              maxWidth: "94%",
+              maxHeight: "94%",
+              display: "block",
+            }
+          : { width: inlineSize, height: inlineSize }
+      }
     />
   );
 }

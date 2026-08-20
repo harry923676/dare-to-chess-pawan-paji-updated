@@ -116,9 +116,9 @@ function SettingsPage() {
           className="mt-3"
           value={[settings.pieceSize]}
           min={70}
-          max={100}
+          max={115}
           step={2}
-          onValueChange={([v]) => update({ pieceSize: v ?? 88 })}
+          onValueChange={([v]) => update({ pieceSize: v ?? 110 })}
         />
         <p className="mt-1 text-xs text-muted-foreground">{settings.pieceSize}%</p>
       </section>
