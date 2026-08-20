@@ -61,6 +61,17 @@ export const DEFAULT_SETTINGS: Settings = {
   onboarded: false,
 };
 
+const clampPieceSize = (value: number | undefined) => {
+  if (!Number.isFinite(value)) return DEFAULT_SETTINGS.pieceSize;
+  return Math.min(150, Math.max(90, value));
+};
+
+const normalizeSettings = (input: Partial<Settings> = {}): Settings => {
+  const next: Settings = { ...DEFAULT_SETTINGS, ...input };
+  next.pieceSize = clampPieceSize(next.pieceSize);
+  return next;
+};
+
 const KEY = "dtc.settings";
 const VISUAL_RESET_KEY = "dtc.visual-reset.v1";
 
@@ -84,7 +95,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(KEY);
       const saved = raw ? (JSON.parse(raw) as Partial<Settings>) : {};
-      const next = { ...DEFAULT_SETTINGS, ...saved };
+      const next = normalizeSettings(saved);
       if (!localStorage.getItem(VISUAL_RESET_KEY)) {
         next.theme = "classic";
         next.pieceSet = "classic";
@@ -99,15 +110,20 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    localStorage.setItem(KEY, JSON.stringify(settings));
-    document.documentElement.dataset['theme'] = settings.theme;
+    const persisted = normalizeSettings(settings);
+    localStorage.setItem(KEY, JSON.stringify(persisted));
+    document.documentElement.dataset['theme'] = persisted.theme;
   }, [settings, hydrated]);
 
   const value = useMemo<Ctx>(
     () => ({
       settings,
       hydrated,
-      update: (patch) => setSettings((prev) => ({ ...prev, ...patch })),
+      update: (patch) =>
+        setSettings((prev) => {
+          const next = normalizeSettings({ ...prev, ...patch });
+          return next;
+        }),
     }),
     [settings, hydrated],
   );
