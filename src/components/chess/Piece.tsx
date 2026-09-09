@@ -45,7 +45,7 @@ export function Piece({ type, color, board = false, sizePercent = 100, className
               maxWidth: "100%",
               maxHeight: "100%",
               display: "block",
-              transform: "scale(1.2)",
+              transform: "scale(1.5)",
               transformOrigin: "center center",
               filter:
                 "drop-shadow(0 8px 8px rgba(0,0,0,0.22)) contrast(1.08) saturate(1.05)",
