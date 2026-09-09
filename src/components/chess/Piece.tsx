@@ -29,6 +29,7 @@ export function Piece({ type, color, board = false, sizePercent = 100, className
   const src = PIECES[`${color}${type}`];
   const clampedBoardPercent = Math.min(Math.max(sizePercent, 90), 140);
   const inlineSize = board ? `${clampedBoardPercent}%` : `${Math.max(1.5, sizePercent / 74)}em`;
+  const boardTransform = type === "p" ? "translateY(-6%) scale(1.5)" : "scale(1.5)";
 
   return (
     <img
@@ -45,7 +46,7 @@ export function Piece({ type, color, board = false, sizePercent = 100, className
               maxWidth: "100%",
               maxHeight: "100%",
               display: "block",
-              transform: "scale(1.5)",
+              transform: boardTransform,
               transformOrigin: "center center",
               filter:
                 "drop-shadow(0 8px 8px rgba(0,0,0,0.22)) contrast(1.08) saturate(1.05)",
