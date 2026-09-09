@@ -29,7 +29,14 @@ export function Piece({ type, color, board = false, sizePercent = 100, className
   const src = PIECES[`${color}${type}`];
   const clampedBoardPercent = Math.min(Math.max(sizePercent, 90), 140);
   const inlineSize = board ? `${clampedBoardPercent}%` : `${Math.max(1.5, sizePercent / 74)}em`;
-  const boardTransform = type === "q" ? "scale(1.2)" : "scale(1.5)";
+  const boardTransform = {
+    p: "translate(-1%, -34%) scale(1.5)",
+    n: "translate(-3%, -20%) scale(1.5)",
+    b: "translate(-4%, -15%) scale(1.5)",
+    r: "translate(-4%, -25%) scale(1.5)",
+    q: "translate(-4%, -9%) scale(1.2)",
+    k: "scale(1.2)",
+  }[type] ?? "scale(1.5)";
 
   return (
     <img
